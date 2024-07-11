@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "clean-architecture-with-python"
+version = "0.1.0"
+description = "project to learn clean architecture with python"
+authors = ["Douglas Silva <douglaseusilva@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.111.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
