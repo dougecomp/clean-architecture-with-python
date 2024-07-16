@@ -11,7 +11,6 @@ class FastApiHttpServer(HttpServer):
     async def __handle(self, controller: HttpController, request: Request, response: Response):
         json = await request.json() if request.method == "POST" else {}
         input = request.path_params | request.query_params._dict | json
-        print(input)
         controllerOutput = controller.handle(input)
         response.status_code = controllerOutput.status_code
         return controllerOutput.body
