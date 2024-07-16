@@ -9,7 +9,7 @@ class FastApiHttpServer(HttpServer):
         self.app = FastAPI()
 
     def __handle(self, controller: HttpController, request: Request, response: Response):
-        input = request.path_params
+        input = request.path_params | request.query_params._dict
         controllerOutput = controller.handle(input)
         response.status_code = controllerOutput.status_code
         return controllerOutput.body
