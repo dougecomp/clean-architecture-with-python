@@ -13,7 +13,8 @@
 			"extensions": [
 				"ms-python.python",
 				"Codeium.codeium",
-				"EditorConfig.EditorConfig"
+				"EditorConfig.EditorConfig",
+				"tamasfe.even-better-toml"
 			]
 		}
 	}
