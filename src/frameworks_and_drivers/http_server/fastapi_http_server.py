@@ -8,7 +8,9 @@ class FastApiHttpServer(HttpServer):
     def __init__(self):
         self.app = FastAPI()
 
-    async def __handle(self, controller: HttpController, request: Request, response: Response):
+    async def __handle(
+        self, controller: HttpController, request: Request, response: Response
+    ):
         json = await request.json() if request.method == "POST" else {}
         input = request.path_params | request.query_params._dict | json
         controllerOutput = controller.handle(input)
@@ -17,7 +19,9 @@ class FastApiHttpServer(HttpServer):
 
     def register(self, route: str, method: str, controller: HttpController):
         async def handler(request: Request, response: Response):
-            return await self.__handle(controller=controller, request=request, response=response)
+            return await self.__handle(
+                controller=controller, request=request, response=response
+            )
 
         self.app.add_api_route(
             path=route,
