@@ -1,10 +1,5 @@
 from src.frameworks_and_drivers.http_server.fastapi_http_server import FastApiHttpServer
-from src.interface_adapters.controllers.hello_world_controller import (
-    HelloWorldController,
-)
+from src.main.http_server_factory import makeHttpServer
 
-httpServer = FastApiHttpServer()
-httpServer.register(
-    route="/hello/{name}", method="GET", controller=HelloWorldController()
-)
+httpServer: FastApiHttpServer = makeHttpServer()
 app = httpServer.app
