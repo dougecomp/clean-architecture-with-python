@@ -1,3 +1,4 @@
+from pprint import pprint
 from typing import Generator, TypedDict
 from pytest import fixture
 from unittest.mock import Mock
@@ -14,10 +15,12 @@ class SetUpType (TypedDict):
   api_server: HttpServer
   client: TestClient
 
+default_controller_response = HttpResponse(status_code=201, body='Hello World!')
+
 @fixture
 def set_up() -> Generator[SetUpType, None, None]:
   controller_mock = Mock(HttpController)
-  controller_mock.handle.return_value = HttpResponse(status_code=200, body='Hello World!')
+  controller_mock.handle.return_value = default_controller_response
   api_server = FastApiHttpServer()
   client = TestClient(api_server.app)
   yield {'controller': controller_mock, 'api_server': api_server, 'client': client}
@@ -38,8 +41,8 @@ def test_return_controller_response_when_request_is_handled(set_up):
 
   response = client.get(url="/any_route")
 
-  assert response.status_code == 200
-  assert response.json() == 'Hello World!'
+  assert response.status_code == default_controller_response.status_code
+  assert response.json() == default_controller_response.body
 
 def test_can_forward_query_params_to_controller(set_up):
   controller_mock = set_up['controller']
