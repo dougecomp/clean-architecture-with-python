@@ -14,7 +14,8 @@
 				"ms-python.python",
 				"Codeium.codeium",
 				"EditorConfig.EditorConfig",
-				"tamasfe.even-better-toml"
+				"tamasfe.even-better-toml",
+				"DiogoNolasco.pyinit"
 			]
 		}
 	}
