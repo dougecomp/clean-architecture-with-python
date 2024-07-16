@@ -14,8 +14,8 @@ class FlaskHttpServer(HttpServer):
   def __handle(
         self, controller: HttpController
     ):
-        json = request.get_json() if request.method == "POST" else {}
-        input = request.values.to_dict() | request.get_json() | json
+        json = request.get_json() if request.is_json else {}
+        input = request.values.to_dict() | json
         controller_output = controller.handle(input)
         response = jsonify(controller_output.body)
         response.status_code = controller_output.status_code
