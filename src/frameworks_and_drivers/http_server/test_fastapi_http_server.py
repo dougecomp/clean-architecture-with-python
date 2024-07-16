@@ -1,5 +1,5 @@
-from typing import TypedDict
-import pytest
+from typing import Generator, TypedDict
+from pytest import fixture
 from unittest.mock import Mock
 
 from fastapi.testclient import TestClient
@@ -14,13 +14,14 @@ class SetUpType (TypedDict):
   api_server: HttpServer
   client: TestClient
 
-@pytest.fixture
-def set_up() -> SetUpType:
+@fixture
+def set_up() -> Generator[SetUpType, None, None]:
   controller_mock = Mock(HttpController)
   controller_mock.handle.return_value = HttpResponse(status_code=200, body='Hello World!')
   api_server = FastApiHttpServer()
   client = TestClient(api_server.app)
-  return {'controller': controller_mock, 'api_server': api_server, 'client': client}
+  yield {'controller': controller_mock, 'api_server': api_server, 'client': client}
+  client.close()
 
 def test_return_not_found_when_route_not_found(set_up):
   client = set_up['client']
