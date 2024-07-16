@@ -12,11 +12,10 @@ class FlaskHttpServer(HttpServer):
     pass
 
   def __handle(
-        self, controller: HttpController
+        self, controller: HttpController, path_params: dict = {}
     ) -> Response:
       json = request.get_json() if request.is_json else {}
       query_params = request.args.to_dict()
-      path_params = {}
       input = query_params | path_params | json
       controller_output = controller.handle(input)
       response = jsonify(controller_output.body)
@@ -25,9 +24,10 @@ class FlaskHttpServer(HttpServer):
       return response
 
   def register(self, route: str, method: str, controller: HttpController):
-    def handler():
+    def handler(*args, **kwargs):
       return self.__handle(
-        controller=controller
+        controller=controller,
+        path_params=kwargs
       )
 
     self.app.add_url_rule(
