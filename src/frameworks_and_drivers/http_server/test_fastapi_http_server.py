@@ -38,3 +38,14 @@ def test_can_forward_query_params_to_controller():
   client.get(url="/any_route?name=any_name")
 
   controllerMock.handle.assert_called_once_with({"name": "any_name"})
+
+def test_can_forward_path_params_to_controller():
+  controllerMock = Mock(spec=HttpController)
+  controllerMock.handle.return_value = HttpResponse(status_code=200, body='')
+  api_server = FastApiHttpServer()
+  api_server.register(method="GET", route="/any_route/{name}", controller=controllerMock)
+  client = TestClient(api_server.app)
+
+  client.get(url="/any_route/any_name")
+
+  controllerMock.handle.assert_called_once_with({"name": "any_name"})
