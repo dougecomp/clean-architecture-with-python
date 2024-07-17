@@ -12,7 +12,7 @@ from .fastapi_http_server import FastApiHttpServer
 
 class SetUpType(TypedDict):
     controller: Mock
-    api_server: HttpServer
+    http_server: HttpServer
     client: TestClient
 
 
@@ -23,9 +23,9 @@ default_controller_response = HttpResponse(status_code=201, body="Hello World!")
 def set_up() -> Generator[SetUpType, None, None]:
     controller_mock = Mock(HttpController)
     controller_mock.handle.return_value = default_controller_response
-    api_server = FastApiHttpServer()
-    client = TestClient(api_server.app)
-    yield {"controller": controller_mock, "api_server": api_server, "client": client}
+    http_server = FastApiHttpServer()
+    client = TestClient(http_server.app)
+    yield {"controller": controller_mock, "http_server": http_server, "client": client}
     client.close()
 
 
@@ -39,9 +39,9 @@ def test_return_not_found_when_route_not_found(set_up):
 
 def test_return_controller_response_when_request_is_handled(set_up):
     controller_mock = set_up["controller"]
-    api_server = set_up["api_server"]
+    http_server = set_up["http_server"]
     client = set_up["client"]
-    api_server.register(method="GET", route="/any_route", controller=controller_mock)
+    http_server.register(method="GET", route="/any_route", controller=controller_mock)
 
     response = client.get(url="/any_route")
 
@@ -51,9 +51,9 @@ def test_return_controller_response_when_request_is_handled(set_up):
 
 def test_can_forward_query_params_to_controller(set_up):
     controller_mock = set_up["controller"]
-    api_server = set_up["api_server"]
+    http_server = set_up["http_server"]
     client = set_up["client"]
-    api_server.register(method="GET", route="/any_route", controller=controller_mock)
+    http_server.register(method="GET", route="/any_route", controller=controller_mock)
 
     client.get(url="/any_route?name=any_name")
 
@@ -62,9 +62,9 @@ def test_can_forward_query_params_to_controller(set_up):
 
 def test_can_forward_path_params_to_controller(set_up):
     controller_mock = set_up["controller"]
-    api_server = set_up["api_server"]
+    http_server = set_up["http_server"]
     client = set_up["client"]
-    api_server.register(
+    http_server.register(
         method="GET", route="/any_route/{name}", controller=controller_mock
     )
 
@@ -75,9 +75,9 @@ def test_can_forward_path_params_to_controller(set_up):
 
 def test_can_forward_body_params_to_controller(set_up):
     controller_mock = set_up["controller"]
-    api_server = set_up["api_server"]
+    http_server = set_up["http_server"]
     client = set_up["client"]
-    api_server.register(method="POST", route="/any_route", controller=controller_mock)
+    http_server.register(method="POST", route="/any_route", controller=controller_mock)
 
     client.post(url="/any_route", json={"name": "any_name"})
 
