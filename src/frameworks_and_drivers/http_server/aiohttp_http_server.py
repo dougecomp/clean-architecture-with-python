@@ -13,7 +13,7 @@ class AIOHttpHttpServer(HttpServer):
       self, controller: HttpController, request: web.Request
   ) -> web.Response:
     json = await request.json() if request.method == "POST" else {}
-    query_params = {}
+    query_params = {**request.query}
     path_params = {}
     input = query_params | path_params | json
     controller_output = controller.handle(input)
