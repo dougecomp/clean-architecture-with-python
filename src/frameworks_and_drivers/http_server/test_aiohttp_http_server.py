@@ -44,3 +44,14 @@ async def test_return_controller_response_when_request_is_handled(set_up: SetUpT
 
   assert response.status == default_controller_response.status_code
   assert await response.text() == default_controller_response.body
+
+async def test_can_forward_query_params_to_controller(set_up: SetUpType):
+  controller_mock = set_up["controller"]
+  http_server = set_up["http_server"]
+  client = set_up["client"]
+  http_server.register(route="/any_route", method="GET", controller=controller_mock)
+  await client.start_server()
+
+  await client.get("/any_route?name=any_name")
+
+  controller_mock.handle.assert_called_once_with({"name": "any_name"})
